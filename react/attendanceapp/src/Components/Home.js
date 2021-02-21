@@ -96,8 +96,8 @@ class Home extends Component {
                             </Menu>
                         </Col>
                         <Col lg={9}>
-                            {this.state.content==="addTrainer" && <AddTrainer/>}
-                            {this.state.content==="addSession" && <AddSession/>}
+                            {this.state.content==="addTrainer" && <AddTrainer token={this.state.token}/>}
+                            {this.state.content==="addSession" && <AddSession token={this.state.token}/>}
                         </Col>
                     </Row>
                 </Container>

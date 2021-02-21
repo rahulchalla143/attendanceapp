@@ -13,5 +13,6 @@ slotid int primary key,
 slotname varchar(30)
 );
 
+select * from trainer;
 
 insert into slots values (1,"morning"),(2,"afternoon"),(3,"evening"),(4,"night");

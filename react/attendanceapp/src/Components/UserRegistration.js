@@ -156,7 +156,6 @@ class UserRegistration extends Component {
         } else {
             this.setState({ selectuser: true, Role: "User", Approved: "Yes" })
         }
-
     }
 
 
