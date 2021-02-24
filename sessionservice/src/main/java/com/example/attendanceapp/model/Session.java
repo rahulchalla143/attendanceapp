@@ -32,5 +32,9 @@ public class Session {
 	private String sessiondate;
 	@Column(name = "sessiontime", length = 40)
 	private String sessiontime;
+	@Column(name = "availableslots", length = 40)
+	private String availableslots;
+	@Column(name = "feedbackquestion", length = 400)
+	private String feedbackquestion;
 
 }

@@ -64,7 +64,7 @@ public class SessionController {
 
 	@DeleteMapping("/deletesession/{sessionId}/{userId}")
 	public void deleteSessionByUser(@RequestHeader("Authorization") String token, @PathVariable("sessionId") int sessionId,
-			@PathVariable("userId") int userId) {
+			@PathVariable("userId") String userId) {
 		sessionServiceImpl.deleteSessionByUser(token, sessionId,userId);
 	}
 	

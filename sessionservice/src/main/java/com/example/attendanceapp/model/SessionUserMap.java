@@ -30,5 +30,11 @@ public class SessionUserMap {
 	private int sessionid;
 	@Column(name = "userid", length = 40)
 	private String userid;
+	@Column(name = "selectedslot", length = 40)
+	private String selectedslot;
+	@Column(name = "attended", length = 40)
+	private String attended;
+	@Column(name = "feedback", length = 40)
+	private String feedback;
 
 }

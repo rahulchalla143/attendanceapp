@@ -135,7 +135,7 @@ public class SessionServiceImpl implements SessionService {
 	}
 
 	@Transactional
-	public void deleteSessionByUser(String token, int sessionId, int userId) {
+	public void deleteSessionByUser(String token, int sessionId, String userId) {
 		AuthResponse response = authClient.getValidity(token);
 		try {
 			response.getEmail();

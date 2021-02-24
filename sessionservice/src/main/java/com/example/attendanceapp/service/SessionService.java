@@ -12,7 +12,7 @@ public interface SessionService {
 	public List<Session> getSessionsByUserId(String token, String userId);
 	public void modifySession(String token, Session session);
 	public void deleteSession(String token, int sessionId);
-	public void deleteSessionByUser(String token, int sessionId, int userId);
+	public void deleteSessionByUser(String token, int sessionId, String userId);
 	public void mapSkills(String token, int sessionId, int skillId);
 	public Session getSessionBySessionId(String token, int sessionId);
 
