@@ -32,10 +32,5 @@ public class Trainer {
 	
 	@Column(name="trainer_email") 
 	private String email;
-	
-	@Column(name="trainer_skill")
-	private Integer skill_id;
-	
-	@Column(name="session_id")
-	private Integer session_id;
+
 }

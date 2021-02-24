@@ -15,4 +15,6 @@ public class Session {
 	private String sessiondesc;
 	private String sessiondate;
 	private String sessiontime;
+	private String availableslots;
+	private String feedbackquestion;
 }

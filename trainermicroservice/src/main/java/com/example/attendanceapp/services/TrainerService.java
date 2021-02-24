@@ -62,23 +62,23 @@ public class TrainerService {
 	
 	@Transactional
 	public void modifyTrainer(String token,Trainer trainer,Integer id) throws TrainerAlreadyExistsException {
-		AuthResponse response = authClient.getValidity(token);
-		try {
-			response.getEmail();
-		} catch (Exception e) {
-			throw new UnauthorizedException();
-		}
-		if (response.getRole().equals("Admin")) {
-			Trainer t=trainerRepository.findById(id).get();
-			t.setName(trainer.getName());
-			t.setEmail(trainer.getEmail());
-			t.setContactNumber(trainer.getContactNumber());
-			t.setSession_id(trainer.getSession_id());
-			t.setSkill_id(trainer.getSkill_id());
-			trainerRepository.save(t);
-		} else {
-			throw new UnauthorizedException();
-		}
+//		AuthResponse response = authClient.getValidity(token);
+//		try {
+//			response.getEmail();
+//		} catch (Exception e) {
+//			throw new UnauthorizedException();
+//		}
+//		if (response.getRole().equals("Admin")) {
+//			Trainer t=trainerRepository.findById(id).get();
+//			t.setName(trainer.getName());
+//			t.setEmail(trainer.getEmail());
+//			t.setContactNumber(trainer.getContactNumber());
+//			t.setSession_id(trainer.getSession_id());
+//			t.setSkill_id(trainer.getSkill_id());
+//			trainerRepository.save(t);
+//		} else {
+//			throw new UnauthorizedException();
+//		}
 	}
 
 	
