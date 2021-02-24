@@ -69,14 +69,14 @@ class Home extends Component {
         if (this.state.userId == 0 || this.state.userId == undefined) {
             return (
                 <div className="bgimage">
-                    <MenuComponent />
+                    <MenuComponent userId={0}/>
                     <Container fluid className="p-5 mt-1">
                         <h1 className="text-white mb-5">Welcome To AttendanceApp</h1>
                         <div style={{height:"200px"}}>
 
                         </div>
                         <h2 className="text-white font-weight-lighter mb-5 mt-5">Please <Link to="/login">Login</Link> with your Email</h2>
-                        <h2 className="text-white font-weight-lighter mb-5">New User? Register <Link to="/userregistration">Here</Link> with your Email</h2>
+                        <h2 className="text-white font-weight-lighter mb-5">New User? Register <Link to="/userregistration">Here</Link></h2>
                     </Container>
                 </div>
             )

@@ -6,6 +6,7 @@ import Home from './Components/Home';
 import AddTrainer from './Components/AddTrainer';
 import AddSession from './Components/AddSession';
 import LoginComponent from './Components/Login';
+import HomeUser from './Components/HomeUser';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
        <Route path="/login" component={LoginComponent} /> 
        <Route path="/trainer" component={AddTrainer} />
        <Route path="/session" component={AddSession} />
+       <Route path="/userhome" component={HomeUser} />
 
      </switch>
     </div>
