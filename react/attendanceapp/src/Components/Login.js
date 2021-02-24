@@ -3,6 +3,8 @@ import { Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import MenuComponent from './MenuComponents';
 
+const mql = window.matchMedia(`(min-width: 800px)`);
+
 class LoginComponent extends Component {
 
     constructor() {
@@ -12,11 +14,14 @@ class LoginComponent extends Component {
             password: "",
             emailerror: "",
             passworderror: "",
-            userId: 0
+            userId: 0,
+            sidebarDocked:true,
+            height: "100%"
         }
         this.handleEmailChange = this.handleEmailChange.bind(this)
         this.handlePasswordChange = this.handlePasswordChange.bind(this)
         this.submitHandler = this.submitHandler.bind(this)
+        this.mediaQueryChanged=this.mediaQueryChanged.bind(this)
     }
 
     handleEmailChange(event) {
@@ -26,6 +31,23 @@ class LoginComponent extends Component {
         else {
             this.setState({ userId: this.state.userId, email: event.target.value, password: this.state.password, emailerror: "", passworderror: this.state.passworderror })
         }
+    }
+
+    // const mql = window.matchMedia(`(min-width: 800px)`);
+componentWillMount() {
+        mql.addListener(this.mediaQueryChanged);
+    }
+
+    mediaQueryChanged() {
+        if(mql.matches){
+            this.setState({ sidebarDocked: mql.matches , height:"100%" });       
+        }
+        else{
+            this.setState({ sidebarDocked: mql.matches, height:"0px" });
+        }
+    }
+    componentWillUnmount() {
+        mql.removeListener(this.mediaQueryChanged);
     }
 
     handlePasswordChange(event) {
@@ -50,17 +72,17 @@ class LoginComponent extends Component {
                 alert("Form submitted successfully!!" + res.data.token)
 
                 this.props.history.push({
-                    pathname: '/',
-                    state: { 
+                    pathname: '/userhome',
+                    state: {
                         token: res.data.token,
                         userId: res.data.uid,
                         userName: res.data.firstname + " " + res.data.lastname,
-                        role:res.data.role,
-                        email:res.data.email,
-                        age:res.data.age,
-                        gender:res.data.gender,
-                        contact:res.data.contact
-                        }
+                        role: res.data.role,
+                        email: res.data.email,
+                        age: res.data.age,
+                        gender: res.data.gender,
+                        contact: res.data.contact
+                    }
                 })
             })
                 .catch((err) => {
@@ -75,37 +97,40 @@ class LoginComponent extends Component {
     render() {
 
         return (
-            <div>
+            <div >
                 <MenuComponent userId={0} />
-
-                <Container>
+                <Container fluid className="login1">
                     <Row>
-                        <Col></Col>
-                        <Col className="text-center">
-                            <form onSubmit={this.submitHandler}>
+                   
+                        <Col lg={9} style= {{height :this.state.height }} >
 
-
-                                <h6 style={{ color: "red" }}>Fields marked with * are mandatory</h6>
-                                <h6 style={{ color: "red" }}>{this.state.emailerror}</h6>
-                                <h6 style={{ color: "red" }}>{this.state.passworderror}</h6>
-                                <label>
-                                    Email Address <span style={{ color: "red" }}>*</span>
-                                    <br />
-                                    <input type="email" value={this.state.email} onChange={this.handleEmailChange} />
-                                </label>
-                                <br />
-                                <label>
-                                    Password <span style={{ color: "red" }}>*</span>
-                                    <br />
-                                    <input type="password" value={this.state.password} onChange={this.handlePasswordChange} />
-                                </label>
-                                <br />
-                                <button type="submit" className="btn-primary">Submit</button>
-                            </form>
                         </Col>
-                        <Col></Col>
+
+                            <Col lg={3} className="login2 d-flex flex-column " >
+                                <form onSubmit={this.submitHandler}>
+                                    <h2 style= {{ color: "white" }}  >Login</h2>
+                                    <h6 style= {{ color: "red" }} >Fields marked with * are mandatory</h6>
+                                    <h6 style={{ color: "red" }}>{this.state.emailerror}</h6>
+                                    <h6 style={{ color: "red" }}>{this.state.passworderror}</h6>
+                                    <label style={{ color: "white" }}>
+                                        Email Address <span style={{ color: "red" }}>*</span>
+                                        <br />
+                                        <input type="email" value={this.state.email} onChange={this.handleEmailChange} />
+                                    </label>
+                                    <br />
+                                    <label style={{ color: "white" }}>
+                                        Password <span style={{ color: "red" }}>*</span>
+                                        <br />
+                                        <input type="password" value={this.state.password} onChange={this.handlePasswordChange} />
+                                    </label>
+                                    <br />
+                                    <button type="submit" className="btn-primary">Submit</button>
+                                </form>
+                            </Col>
+                            
                     </Row>
                 </Container>
+
             </div>
         )
     }

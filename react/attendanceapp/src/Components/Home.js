@@ -1,23 +1,25 @@
 import React, { Component } from 'react'
-import { Menu } from 'semantic-ui-react';
 import "../StyleSheets/MyStyle.css";
 import MenuComponent from './MenuComponents';
 import AddTrainer from './AddTrainer';
 import AddSession from './AddSession';
-import { Container, Row, Col } from 'react-bootstrap';
-import {Link} from 'react-router-dom';
-import attendancebg1 from "../Images/attendancebg1.jpg";
+import Sidebar from "react-sidebar";
+import { MenuButtonWideFill } from "react-bootstrap-icons";
+import { Container, Row, Button } from "react-bootstrap";
+import {Link} from "react-router-dom";
 
+const mql = window.matchMedia(`(min-width: 800px)`);
 
 class Home extends Component {
 
 
     constructor(props) {
         super(props)
-        this.handleMenuSelect = this.handleMenuSelect.bind(this);
-        this.setInitialState = this.setInitialState.bind(this);
         this.state = {
-            content: "addTrainer",
+            content: "viewTrainers",
+            sidebarMaxWidth: "25%",
+            sidebarDocked: mql.matches,
+            sidebarOpen: false,
             token: null,
             userId: 0,
             userName: null,
@@ -27,6 +29,12 @@ class Home extends Component {
             gender: null,
             contact: null
         }
+        this.mediaQueryChanged = this.mediaQueryChanged.bind(this);
+        this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
+        this.onHamBurgerClicked = this.onHamBurgerClicked.bind(this);
+        this.onHamBurgerClosed = this.onHamBurgerClosed.bind(this);
+        this.setInitialState = this.setInitialState.bind(this);
+        this.setContent = this.setContent.bind(this);
     }
 
     setInitialState() {
@@ -56,13 +64,44 @@ class Home extends Component {
         }
     }
 
-    handleMenuSelect(event, { name }) {
-        this.setState({ content: name })
+    componentWillMount() {
+        mql.addListener(this.mediaQueryChanged);
+    }
+
+    mediaQueryChanged() {
+        if(mql.matches){
+            this.setState({ sidebarDocked: mql.matches, sidebarOpen: false, sidebarMaxWidth:"25%" });       
+        }
+        else{
+            this.setState({ sidebarDocked: mql.matches, sidebarOpen: false, sidebarMaxWidth:"90%" });
+        }
+    }
+
+    onSetSidebarOpen(open) {
+        this.setState({ sidebarOpen: open });
+    }
+
+    componentWillUnmount() {
+        mql.removeListener(this.mediaQueryChanged);
+    }
+
+    onHamBurgerClicked() {
+        this.setState({ sidebarOpen: true });
+    }
+
+    onHamBurgerClosed() {
+        this.setState({ sidebarOpen: false });
     }
 
     componentDidMount() {
         this.setInitialState()
     }
+
+    setContent(event){
+        this.setState({content:event.target.id})
+    }
+
+
 
 
     render() {
@@ -81,45 +120,65 @@ class Home extends Component {
                 </div>
             )
         }
-        console.log(JSON.stringify(this.state))
         return (
-            <div>
+            < div >
                 <MenuComponent
                     token={this.state.token}
                     userId={this.state.userId}
                     userName={this.state.userName}
                     role={this.state.role}
                     email={this.state.email}
-                    age={this.state.age}
-                    gender={this.state.gender}
-                    contact={this.state.contact}
                 />
-                <Container fluid>
-                    <Row>
-                        <Col lg={2} className="sideBar bg-dark">
-                            <Menu vertical fluid className="bg-dark my-4">
-                                <h2 className="bg-dark text-white mb-5">Welcome {this.state.userName}</h2>
-                                <Menu.Item className="bg-light mb-2" name="addTrainer" onClick={this.handleMenuSelect}>
-                                    AddTrainer
-                                </Menu.Item>
-                                <Menu.Item className="bg-light mb-2" name="addSession" onClick={this.handleMenuSelect}>
-                                    AddSession
-                                </Menu.Item>
-                                <Menu.Item className="bg-light mb-2" name="addTrainer" onClick={this.handleMenuSelect}>
-                                    AddTrainer
-                                </Menu.Item>
-                                <Menu.Item className="bg-light mb-2" name="addTrainer" onClick={this.handleMenuSelect}>
-                                    AddTrainer
-                                </Menu.Item>
-                            </Menu>
-                        </Col>
-                        <Col lg={9}>
-                            {this.state.content === "addTrainer" && <AddTrainer token={this.state.token} />}
-                            {this.state.content === "addSession" && <AddSession token={this.state.token} />}
-                        </Col>
-                    </Row>
-                </Container>
-            </div>
+                <Sidebar
+                    styles={
+                        {
+                        root: {
+                            marginTop: "62px"
+                        },
+                        sidebar:{
+                            width:this.state.sidebarMaxWidth
+                        }
+                    }
+                    }
+
+                    sidebar={
+                        <Container fluid className="bgimage">
+                            <Row>
+                                {!this.state.sidebarDocked && <MenuButtonWideFill size={30} onClick={this.onHamBurgerClosed} />}
+                            </Row>
+                            <Row className="d-flex justify-content-center">
+                                <h1 className="text-white font-weight-lighter my-4">Welcome {this.state.userName}</h1>
+                            </Row>
+                            <hr style={{borderTop:"1px solid white"}}/>
+                            <Row className="d-flex justify-content-center mt-5">
+                                <Button className="btn bg-transparent border border-white p-3 px-5 mb-3" id="viewTrainers" onClick={this.setContent}>View Trainers</Button>
+                            </Row>
+                            <Row className="d-flex justify-content-center">
+                                <Button className="btn bg-transparent border border-white p-3 px-5 mb-3" id="viewSessions" onClick={this.setContent}>View Sessions</Button>
+                            </Row>
+                            <Row className="d-flex justify-content-center">
+                                <Button className="btn bg-transparent border border-white p-3 px-5 mb-3" id="addSkills" onClick={this.setContent}>Add Skills</Button>
+                            </Row>
+                            <div style={{height:"180px"}}/>
+                        </Container>
+                    }
+                    open={this.state.sidebarOpen}
+                    docked={this.state.sidebarDocked}
+                    onSetOpen={this.onSetSidebarOpen}>
+                    <Container>
+
+                        <Row>
+                            {!this.state.sidebarDocked && <MenuButtonWideFill size={30} onClick={this.onHamBurgerClicked} />}
+                        </Row>
+                        <Row>
+                            {this.state.content=="viewTrainers" && <AddTrainer/>}
+                            {this.state.content=="viewSessions" && <AddSession/>}
+                            {this.state.content=="addSkills" && <AddTrainer/>}
+                        </Row>
+                    </Container>
+                </Sidebar>
+
+            </div >
         )
     }
 }
