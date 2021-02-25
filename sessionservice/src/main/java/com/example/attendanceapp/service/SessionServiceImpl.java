@@ -196,7 +196,7 @@ public class SessionServiceImpl implements SessionService {
 		} catch (Exception e) {
 			throw new UnauthorizedException();
 		}
-		if (response.getRole().equals("Admin") || response.getRole().equals("Admin")) {
+		if (response.getRole().equals("Admin") || response.getRole().equals("User")) {
 			return sessionDAO.findBySessionid(sessionId).get();
 		} else {
 			throw new UnauthorizedException();
