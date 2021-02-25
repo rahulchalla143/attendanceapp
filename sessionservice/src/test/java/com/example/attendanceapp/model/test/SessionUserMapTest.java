@@ -9,7 +9,7 @@ import com.example.attendanceapp.model.SessionUserMap;
 public class SessionUserMapTest {
 	
 	SessionUserMap auth = new SessionUserMap();
-	SessionUserMap auth1 = new SessionUserMap(1,2,"ab","ab","ab","ab");
+	SessionUserMap auth1 = new SessionUserMap(1,2,"ab","ab","Yes","ab","ab");
 	
 	
 

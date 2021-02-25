@@ -30,7 +30,7 @@ public class SessionUserDaoTest {
 	@Test
 	@Rollback(false)
 	public void testSaveSessionUser() {
-		SessionUserMap sessionUserMap = new SessionUserMap(1,1,"125","1","Yes","Good One!");
+		SessionUserMap sessionUserMap = new SessionUserMap(1,1,"125","1","Yes","Yes","Good One!");
 		SessionUserMap addedSessionUserMap = sessionUserDAO.save(sessionUserMap);
 		assertNotNull(addedSessionUserMap);
 	}
@@ -42,7 +42,7 @@ public class SessionUserDaoTest {
 	
 	@Test
 	public void testDeleteByUseridAndSessionid() {
-		SessionUserMap sessionUserMap = new SessionUserMap(2,1,"125","1","Yes","Good One!");
+		SessionUserMap sessionUserMap = new SessionUserMap(2,1,"125","1","Yes","Yes","Good One!");
 		SessionUserMap addedSessionUserMap = sessionUserDAO.save(sessionUserMap);
 		int sessionId = addedSessionUserMap.getSessionid();
 		String userId = addedSessionUserMap.getUserid();

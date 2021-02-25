@@ -23,7 +23,6 @@ import lombok.ToString;
 public class Session {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "sessionid", length = 20, unique=true)
 	private int sessionid;
 	@Column(name = "sessiondesc", length = 200)

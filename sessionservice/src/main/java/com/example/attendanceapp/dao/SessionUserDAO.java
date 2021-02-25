@@ -13,6 +13,8 @@ public interface SessionUserDAO extends JpaRepository<SessionUserMap, Integer>{
 
 	List<SessionUserMap> findByUserid(String userId);
 	
+	SessionUserMap findByUseridAndSessionid(String userId,int sessionId);
+	
 	@Modifying
 	@Query(value="delete from session_user s where s.userid=?1 and s.sessionid=?2")
 	void deleteByUseridAndSessionid(String userId, int sessionId);

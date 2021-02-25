@@ -76,7 +76,39 @@ public class SessionController {
 	
 	@GetMapping("/getskills/{sessionId}")
 	public List<Skill> getSkills(@RequestHeader("Authorization") String token,@PathVariable("sessionId") int sessionId) {
-		return sessionServiceImpl.getSkillsBySession(token,sessionId);
+		return sessionServiceImpl.getSkillsBySessionId(token,sessionId);
 	}
+	
+	@DeleteMapping("/deletesession/{sessionId}/{skillId}")
+	public void deleteSkillsBySessionIdAndSkillId(@RequestHeader("Authorization") String token, @PathVariable("sessionId") int sessionId,
+			@PathVariable("userId") int skillId) {
+		sessionServiceImpl.deleteSkillsBySessionIdAndSkillId(token, sessionId,skillId);
+	}
+	
+	@GetMapping("/approvesession/{userId}/{sessionId}")
+	public void getSkills(@RequestHeader("Authorization") String token,@PathVariable("userId") String userId,@PathVariable("sessionId") int sessionId) {
+		sessionServiceImpl.approveUserToSession(token,userId,sessionId);
+	}
+	
+	@GetMapping("/sessionids")
+	public List<Integer> getAllSessionIds(@RequestHeader("Authorization") String token) {
+		return sessionServiceImpl.getAllSessionIds(token);
+	}
+	
+	@GetMapping("/approvedsessions")
+	public List<Session> getApprovedSessions(@RequestHeader("Authorization") String token,@PathVariable("userId") String userId) {
+		return sessionServiceImpl.getApprovedSessionsByUserId(token, userId);
+	}
+	
+	@GetMapping("/markattendance/{userId}/{sessionId}")
+	public void markAttendance(@RequestHeader("Authorization") String token,@PathVariable("userId") String userId,@PathVariable("sessionId") int sessionId) {
+		sessionServiceImpl.markAttendanceByUser(token, sessionId, userId);
+	}
+	
+	@PostMapping("/markattendance/{userId}/{sessionId}/{feedback}")
+	public void setFeedback(@RequestHeader("Authorization") String token,@PathVariable("userId") String userId,@PathVariable("sessionId") int sessionId,@PathVariable("feedback") String feedback) {
+		sessionServiceImpl.addFeedbackByUser(token, sessionId, userId, feedback);
+	}
+
 
 }
