@@ -20,7 +20,6 @@ import lombok.Setter;
 @Table(name="trainer")
 public class Trainer {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="trainer_id")
 	private Integer id;
 	

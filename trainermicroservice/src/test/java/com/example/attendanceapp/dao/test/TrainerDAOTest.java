@@ -17,14 +17,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.example.attendanceapp.model.Trainer;
-import com.example.attendanceapp.repositories.TrainerRepository;
+import com.example.attendanceapp.repositories.TrainerDAO;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace=Replace.NONE)
 public class TrainerDAOTest {
 	
 	@Autowired
-	private TrainerRepository repo;
+	private TrainerDAO repo;
 	
 	@Test
 	public void testCreateTrainer() {

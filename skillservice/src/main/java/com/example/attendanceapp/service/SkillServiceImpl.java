@@ -1,6 +1,7 @@
 package com.example.attendanceapp.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -83,6 +84,24 @@ public class SkillServiceImpl implements SkillService{
 			skillDAO.deleteBySkillid(skillId);
 		}
 		else {
+			throw new UnauthorizedException();
+		}
+	}
+
+	@Override
+	public List<Integer> getAllSkillIds(String token) {
+		AuthResponse response = authClient.getValidity(token);
+		try {
+			response.getEmail();
+		} catch (Exception e) {
+			throw new UnauthorizedException();
+		}
+		if (response.getRole().equals("Admin")) {
+			List<Skill> skillList = skillDAO.findAll();
+			return skillList.stream()
+					.map(skill -> skill.getSkillid())
+					.collect(Collectors.toList());
+		} else {
 			throw new UnauthorizedException();
 		}
 	}

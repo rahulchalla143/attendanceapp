@@ -23,7 +23,6 @@ import lombok.ToString;
 public class Skill {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "skillid", length = 20, unique=true)
 	private int skillid;
 	@Column(name = "skilltype", length = 20)

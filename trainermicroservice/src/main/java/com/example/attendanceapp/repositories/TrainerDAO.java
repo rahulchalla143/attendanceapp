@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.example.attendanceapp.model.Trainer;
 
 @Repository
-public interface TrainerRepository extends JpaRepository<Trainer, Integer>{
+public interface TrainerDAO extends JpaRepository<Trainer, Integer>{
 
 	
 	@Modifying

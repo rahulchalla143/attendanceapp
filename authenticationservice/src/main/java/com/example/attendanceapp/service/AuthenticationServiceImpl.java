@@ -1,7 +1,9 @@
 package com.example.attendanceapp.service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -112,6 +114,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		else {
 			return null;
 		}
+	}
+
+	@Override
+	public List<String> getAllUserIds(String token) {
+		List<UserData> userList = userDAO.findAll();
+		return userList.stream()
+				.map(user -> user.getUserid())
+				.collect(Collectors.toList());
 	}
 
 }

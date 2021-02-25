@@ -10,5 +10,5 @@ public interface SkillService {
 	public List<Skill> getSkills(String token);
 	public Skill getSkillById(String token, int skillid);
 	public void deleteSkills(String token, int skillId);
-
+	public List<Integer> getAllSkillIds(String token);
 }

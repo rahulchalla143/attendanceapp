@@ -1,5 +1,7 @@
 package com.example.attendanceapp.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +40,11 @@ public class AuthenticationController {
 	@PostMapping("/register")
 	public AuthResponse register(@RequestBody UserData userCredentials) {
 		return authenticationServiceImpl.register(userCredentials);
+	}
+	
+	@GetMapping("/userids")
+	public List<String> getAllUserIds(@RequestHeader("Authorization") String token) {
+		return authenticationServiceImpl.getAllUserIds(token);
 	}
 
 }

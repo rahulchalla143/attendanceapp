@@ -42,4 +42,9 @@ public class SkillController {
 		return skillServiceImpl.getSkillById(token, skillid);
 	}
 	
+	@GetMapping("/skillids")
+	public List<Integer> getAllSkillIds(@RequestHeader("Authorization") String token) {
+		return skillServiceImpl.getAllSkillIds(token);
+	}
+	
 }

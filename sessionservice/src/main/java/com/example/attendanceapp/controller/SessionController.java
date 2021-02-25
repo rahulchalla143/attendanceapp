@@ -105,7 +105,7 @@ public class SessionController {
 		sessionServiceImpl.markAttendanceByUser(token, sessionId, userId);
 	}
 	
-	@PostMapping("/markattendance/{userId}/{sessionId}/{feedback}")
+	@PostMapping("/setfeedback/{userId}/{sessionId}/{feedback}")
 	public void setFeedback(@RequestHeader("Authorization") String token,@PathVariable("userId") String userId,@PathVariable("sessionId") int sessionId,@PathVariable("feedback") String feedback) {
 		sessionServiceImpl.addFeedbackByUser(token, sessionId, userId, feedback);
 	}
