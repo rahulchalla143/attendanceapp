@@ -29,7 +29,7 @@ public class SessionController {
 		sessionServiceImpl.addSession(token, session);
 	}
 
-	@PostMapping("/addsession/{userId}/{sessionId")
+	@PostMapping("/addsession/{userId}/{sessionId}")
 	public void addSessionToUser(@RequestHeader("Authorization") String token, @PathVariable int sessionId,
 			@PathVariable String userId) {
 		sessionServiceImpl.addSessionToUser(token, sessionId, userId);
@@ -79,14 +79,14 @@ public class SessionController {
 		return sessionServiceImpl.getSkillsBySessionId(token,sessionId);
 	}
 	
-	@DeleteMapping("/deletesession/{sessionId}/{skillId}")
+	@DeleteMapping("/deletesessionbyskill/{sessionId}/{skillId}")
 	public void deleteSkillsBySessionIdAndSkillId(@RequestHeader("Authorization") String token, @PathVariable("sessionId") int sessionId,
-			@PathVariable("userId") int skillId) {
+			@PathVariable("skillId") int skillId) {
 		sessionServiceImpl.deleteSkillsBySessionIdAndSkillId(token, sessionId,skillId);
 	}
 	
 	@GetMapping("/approvesession/{userId}/{sessionId}")
-	public void getSkills(@RequestHeader("Authorization") String token,@PathVariable("userId") String userId,@PathVariable("sessionId") int sessionId) {
+	public void approveUser(@RequestHeader("Authorization") String token,@PathVariable("userId") String userId,@PathVariable("sessionId") int sessionId) {
 		sessionServiceImpl.approveUserToSession(token,userId,sessionId);
 	}
 	
@@ -95,7 +95,7 @@ public class SessionController {
 		return sessionServiceImpl.getAllSessionIds(token);
 	}
 	
-	@GetMapping("/approvedsessions")
+	@GetMapping("/approvedsessions/{userId}")
 	public List<Session> getApprovedSessions(@RequestHeader("Authorization") String token,@PathVariable("userId") String userId) {
 		return sessionServiceImpl.getApprovedSessionsByUserId(token, userId);
 	}

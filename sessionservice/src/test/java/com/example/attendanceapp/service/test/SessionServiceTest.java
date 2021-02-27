@@ -9,7 +9,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.awt.print.Pageable;
@@ -22,6 +25,7 @@ import com.example.attendanceapp.client.SkillClient;
 import com.example.attendanceapp.dao.SessionDAO;
 import com.example.attendanceapp.dao.SessionSkillDAO;
 import com.example.attendanceapp.dao.SessionUserDAO;
+import com.example.attendanceapp.exceptions.SessionNotFoundException;
 import com.example.attendanceapp.model.AuthResponse;
 import com.example.attendanceapp.model.Session;
 import com.example.attendanceapp.model.SessionSkillMap;
@@ -77,6 +81,7 @@ public class SessionServiceTest {
 	public void testGetSkillsBySessionId() {
 		List<SessionSkillMap> sessionSkillMapList =new ArrayList<SessionSkillMap>();
 		sessionSkillMapList.add(new SessionSkillMap(1,1,1));
+		when(sessionDAO.findBySessionid(1)).thenReturn(Optional.of(new Session(1,"a","a","a","a","a")));
 		when(sessionSkillDAO.findAllBySessionid(1)).thenReturn(sessionSkillMapList);
 		when(authClient.getValidity("token")).thenReturn(new AuthResponse("a",true,"w","w","User","w","w","w","w","w"));
 		when(skillClient.getSkillById("token", 1)).thenReturn(new Skill(1,"s","s"));
@@ -90,11 +95,29 @@ public class SessionServiceTest {
 		assertEquals(1, sessionServiceImpl.getSessionBySessionId("token", 1).getSessionid());
 	}
 
-//	@Test
-//	public void testApproveUserToSession() {
-//		when(authClient.getValidity("token")).thenReturn(new AuthResponse("a",true,"w","w","Admin","w","w","w","w","w"));
-//		when(sessionUserDAO.findByUseridAndSessionid("1", 1)).thenReturn(new SessionUserMap(1,1,"1","a","A","a","A"));
-//	}
+	@Test
+	public void testMarkAttendanceByUser() {
+		when(sessionUserDAO.findByUseridAndSessionid("a", 1)).thenReturn(new SessionUserMap(1,1,"a","a","a","a","a"));
+		when(sessionDAO.findBySessionid(1)).thenReturn(Optional.of(new Session(1,"a","a","a","a","a")));
+		when(authClient.getValidity("token")).thenReturn(new AuthResponse("a",true,"w","w","User","w","w","w","w","w"));
+		assertDoesNotThrow(()->sessionServiceImpl.markAttendanceByUser("token", 1, "a"));
+	}
+	
+	@Test
+	public void testGetFeedbackFromUser() {
+		when(sessionDAO.findBySessionid(1)).thenReturn(Optional.of(new Session(1,"a","a","a","a","a")));
+		when(sessionUserDAO.findByUseridAndSessionid("a", 1)).thenReturn(new SessionUserMap(1,1,"1","a","a","a","a"));
+		when(authClient.getValidity("token")).thenReturn(new AuthResponse("1",true,"w","w","User","w","w","w","w","w"));
+		assertDoesNotThrow(()->sessionServiceImpl.addFeedbackByUser("token", 1, "a", "This is soo good!"));
+	}
+	
+	@Test
+	public void testApproveUserToSession() {
+		when(sessionDAO.findBySessionid(1)).thenReturn(Optional.of(new Session(1,"a","a","a","a","a")));
+		when(sessionUserDAO.findByUseridAndSessionid("a", 1)).thenReturn(new SessionUserMap(1,1,"a","a","a","a","a"));
+		when(authClient.getValidity("token")).thenReturn(new AuthResponse("a",true,"w","w","Admin","w","w","w","w","w"));
+		assertDoesNotThrow(()->sessionServiceImpl.approveUserToSession("token", "a", 1));
+	}
 	
 	@Test
 	public void testGetApprovedSessionsByUserId() {
@@ -116,6 +139,64 @@ public class SessionServiceTest {
 		when(authClient.getValidity("token")).thenReturn(new AuthResponse("a",true,"w","w","Admin","w","w","w","w","w"));
 		assertEquals(2, sessionServiceImpl.getAllSessionIds("token").size());
 		
+	}
+	
+	@Test
+	public void testAddSession() {
+		when(authClient.getValidity("token")).thenReturn(new AuthResponse("a",true,"w","w","Admin","w","w","w","w","w"));
+		assertDoesNotThrow(()->sessionServiceImpl.addSession("token", new Session(1,"a","a","a","a","a")));	
+	}
+	
+	@Test
+	public void testAddSessionToUser() {
+		when(sessionUserDAO.findByUseridAndSessionid("a", 1)).thenReturn(new SessionUserMap(1,1,"a","a","a","a","a"));
+		when(authClient.getValidity("token")).thenReturn(new AuthResponse("a",true,"w","w","User","w","w","w","w","w"));
+		assertDoesNotThrow(()->sessionServiceImpl.addSessionToUser("token", 1, "a"));	
+	}
+	
+	@Test
+	public void testModifySession() {
+		when(sessionDAO.findBySessionid(1)).thenReturn(Optional.of(new Session(1,"a","a","a","a","a")));
+		when(authClient.getValidity("token")).thenReturn(new AuthResponse("a",true,"w","w","Admin","w","w","w","w","w"));
+		assertDoesNotThrow(()->sessionServiceImpl.modifySession("token", new Session(1,"a","a","a","a","a")));	
+	}
+	
+	@Test
+	public void testDeleteSession() {
+		when(sessionDAO.findBySessionid(1)).thenReturn(Optional.of(new Session(1,"a","a","a","a","a")));
+		when(authClient.getValidity("token")).thenReturn(new AuthResponse("a",true,"w","w","Admin","w","w","w","w","w"));
+		assertDoesNotThrow(()->sessionServiceImpl.deleteSession("token",1));	
+	}
+	
+	@Test
+	public void testDeleteSessionByUser() {
+		when(sessionDAO.findBySessionid(1)).thenReturn(Optional.of(new Session(1,"a","a","a","a","a")));
+		when(authClient.getValidity("token")).thenReturn(new AuthResponse("a",true,"w","w","User","w","w","w","w","w"));
+		assertDoesNotThrow(()->sessionServiceImpl.deleteSessionByUser("token",1,"a"));	
+	}
+	
+	@Test
+	public void testMapSkills() {
+		when(sessionDAO.findBySessionid(1)).thenReturn(Optional.of(new Session(1,"a","a","a","a","a")));
+		when(authClient.getValidity("token")).thenReturn(new AuthResponse("a",true,"w","w","Admin","w","w","w","w","w"));
+		assertDoesNotThrow(()->sessionServiceImpl.mapSkills("token", 1, 1));	
+	}
+	
+	@Test
+	public void testDeleteSkillsBySessionIdAndSkillId() {
+		when(sessionDAO.findBySessionid(1)).thenReturn(Optional.of(new Session(1,"a","a","a","a","a")));
+		when(authClient.getValidity("token")).thenReturn(new AuthResponse("a",true,"w","w","Admin","w","w","w","w","w"));
+		assertDoesNotThrow(()->sessionServiceImpl.deleteSkillsBySessionIdAndSkillId("token", 1, 1));	
+	}
+	
+	
+	@Test
+	public void testSessionNotFoundException() {
+		List<SessionSkillMap> sessionSkillMapList =new ArrayList<SessionSkillMap>();
+		sessionSkillMapList.add(new SessionSkillMap(1,1,1));
+		when(sessionDAO.findBySessionid(1)).thenReturn(Optional.of(new Session(1,"a","a","a","a","a")));
+		when(authClient.getValidity("token")).thenReturn(new AuthResponse("a",true,"w","w","User","w","w","w","w","w"));
+		assertThrows(SessionNotFoundException.class, ()->sessionServiceImpl.getSkillsBySessionId("token", 2));
 	}
 	
 

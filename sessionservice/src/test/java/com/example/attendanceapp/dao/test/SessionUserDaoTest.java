@@ -41,6 +41,11 @@ public class SessionUserDaoTest {
 	}
 	
 	@Test
+	public void testFindByUserIdAndSessionId() {
+		assertThat(sessionUserDAO.findByUseridAndSessionid("125", 1)).isNotNull();
+	}
+	
+	@Test
 	public void testDeleteByUseridAndSessionid() {
 		SessionUserMap sessionUserMap = new SessionUserMap(2,1,"125","1","Yes","Yes","Good One!");
 		SessionUserMap addedSessionUserMap = sessionUserDAO.save(sessionUserMap);

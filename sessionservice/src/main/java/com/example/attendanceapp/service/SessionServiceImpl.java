@@ -15,6 +15,7 @@ import com.example.attendanceapp.client.SkillClient;
 import com.example.attendanceapp.dao.SessionDAO;
 import com.example.attendanceapp.dao.SessionSkillDAO;
 import com.example.attendanceapp.dao.SessionUserDAO;
+import com.example.attendanceapp.exceptions.SessionNotFoundException;
 import com.example.attendanceapp.exceptions.UnauthorizedException;
 import com.example.attendanceapp.model.Session;
 import com.example.attendanceapp.model.SessionSkillMap;
@@ -133,6 +134,9 @@ public class SessionServiceImpl implements SessionService {
 			throw new UnauthorizedException();
 		}
 		if (response.getRole().equals("Admin")) {
+			if(sessionDAO.findBySessionid(sessionId).isEmpty()) {
+				throw new SessionNotFoundException();
+			}
 			sessionDAO.deleteBySessionid(sessionId);
 		} else {
 			throw new UnauthorizedException();
@@ -148,6 +152,9 @@ public class SessionServiceImpl implements SessionService {
 			throw new UnauthorizedException();
 		}
 		if (response.getRole().equals("User")) {
+			if(sessionDAO.findBySessionid(sessionId).isEmpty()) {
+				throw new SessionNotFoundException();
+			}
 			sessionUserDAO.deleteByUseridAndSessionid(userId, sessionId);
 		} else {
 			throw new UnauthorizedException();
@@ -162,6 +169,9 @@ public class SessionServiceImpl implements SessionService {
 			throw new UnauthorizedException();
 		}
 		if (response.getRole().equals("Admin")) {
+			if(sessionDAO.findBySessionid(sessionId).isEmpty()) {
+				throw new SessionNotFoundException();
+			}
 			SessionSkillMap sessionSkillMap = new SessionSkillMap();
 			sessionSkillMap.setSessionid(sessionId);
 			sessionSkillMap.setSkillid(skillId);
@@ -179,6 +189,9 @@ public class SessionServiceImpl implements SessionService {
 			throw new UnauthorizedException();
 		}
 		if (response.getRole().equals("Admin") || response.getRole().equals("User")) {
+			if(sessionDAO.findBySessionid(sessionId).isEmpty()) {
+				throw new SessionNotFoundException();
+			}
 			List<SessionSkillMap> sessionSkillMapList = sessionSkillDAO.findAllBySessionid(sessionId);
 			List<Skill> skillList = sessionSkillMapList.stream()
 					.map(sessionSkill -> skillClient.getSkillById(token, sessionSkill.getSkillid()))
@@ -197,6 +210,9 @@ public class SessionServiceImpl implements SessionService {
 			throw new UnauthorizedException();
 		}
 		if (response.getRole().equals("Admin") || response.getRole().equals("User")) {
+			if(sessionDAO.findBySessionid(sessionId).isEmpty()) {
+				throw new SessionNotFoundException();
+			}
 			return sessionDAO.findBySessionid(sessionId).get();
 		} else {
 			throw new UnauthorizedException();
@@ -213,6 +229,9 @@ public class SessionServiceImpl implements SessionService {
 			throw new UnauthorizedException();
 		}
 		if (response.getRole().equals("Admin")) {
+			if(sessionDAO.findBySessionid(sessionId).isEmpty()) {
+				throw new SessionNotFoundException();
+			}
 			sessionSkillDAO.deleteBySessionidAndSkillid(sessionId, skillId);
 		} else {
 			throw new UnauthorizedException();
@@ -228,6 +247,9 @@ public class SessionServiceImpl implements SessionService {
 			throw new UnauthorizedException();
 		}
 		if (response.getRole().equals("Admin")) {
+			if(sessionDAO.findBySessionid(sessionId).isEmpty()) {
+				throw new SessionNotFoundException();
+			}
 			SessionUserMap sessionUserMap = sessionUserDAO.findByUseridAndSessionid(userId, sessionId);
 			sessionUserMap.setApproved("Yes");
 			sessionUserDAO.save(sessionUserMap);
@@ -267,6 +289,9 @@ public class SessionServiceImpl implements SessionService {
 			throw new UnauthorizedException();
 		}
 		if (response.getRole().equals("User")) {
+			if(sessionDAO.findBySessionid(sessionId).isEmpty()) {
+				throw new SessionNotFoundException();
+			}
 			SessionUserMap sessionUserMap = sessionUserDAO.findByUseridAndSessionid(userId, sessionId);
 			sessionUserMap.setAttended("Yes");
 			sessionUserDAO.save(sessionUserMap);
@@ -284,6 +309,9 @@ public class SessionServiceImpl implements SessionService {
 			throw new UnauthorizedException();
 		}
 		if (response.getRole().equals("User")) {
+			if(sessionDAO.findBySessionid(sessionId).isEmpty()) {
+				throw new SessionNotFoundException();
+			}
 			SessionUserMap sessionUserMap = sessionUserDAO.findByUseridAndSessionid(userId, sessionId);
 			sessionUserMap.setFeedback(feedBack);
 			sessionUserDAO.save(sessionUserMap);
