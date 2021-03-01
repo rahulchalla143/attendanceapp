@@ -16,6 +16,9 @@ class UserViewSessions extends Component {
             sessionsList: [
 
             ],
+            userSessionsList: [
+
+            ],
             userSessionComponentList: []
         }
         this.setInitialState = this.setInitialState.bind(this)
@@ -37,17 +40,33 @@ class UserViewSessions extends Component {
             .then((res) => {
                 console.log(JSON.stringify(res.data))
                 this.setState({ token: this.props.token, userId: this.props.userId, sessionsList: res.data }, () => {
-                    this.state.sessionsList.map(session => {
-                        this.list.push(<UserSessionComponent sessionDetails={session} userId={this.state.userId} token={this.state.token} />)
+                    axios.get("http://localhost:8082/sessionapp/sessions/usermap/"+this.state.userId,
+                    {
+                        headers: {
+                            Authorization: 'Bearer ' + this.props.token
+                        },
                     })
-                    this.setState({ userSessionComponentList: this.list }, () => {
-                        this.list = []
+                    .then((res) => {
+                       this.setState({userSessionsList:res.data},()=>{
+                           this.state.sessionsList.map(session => {
+                               this.list.push(<UserSessionComponent sessionDetails={session} userId={this.state.userId} token={this.state.token} userSessionsList={this.state.userSessionsList}/>)
+                           })
+                           this.setState({ userSessionComponentList: this.list }, () => {
+                               this.list = []
+                           })
+                       })
                     })
+                    .catch((e) => {
+                        console.log("ERRRRRRRrr" + e)
+                    })
+
                 })
             })
             .catch((e) => {
                 console.log("ERRRRRRRrr" + e)
             })
+
+            
     }
 
     render() {

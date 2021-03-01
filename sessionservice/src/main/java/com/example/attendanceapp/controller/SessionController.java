@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.attendanceapp.model.Session;
+import com.example.attendanceapp.model.SessionUserMap;
 import com.example.attendanceapp.model.Skill;
 import com.example.attendanceapp.service.SessionServiceImpl;
 
@@ -50,6 +51,12 @@ public class SessionController {
 	public List<Session> getSessionsByUserId(@RequestHeader("Authorization") String token,
 			@PathVariable("userId") String userId) {
 		return sessionServiceImpl.getSessionsByUserId(token, userId);
+	}
+	
+	@GetMapping("/sessions/usermap/{userId}")
+	public List<SessionUserMap> getSessionUserMapByUserId(@RequestHeader("Authorization") String token,
+			@PathVariable("userId") String userId) {
+		return sessionServiceImpl.getSessionUserMapByUserId(token, userId);
 	}
 
 	@PutMapping("/modifysession")

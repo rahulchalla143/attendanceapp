@@ -103,6 +103,20 @@ public class SessionServiceImpl implements SessionService {
 			throw new UnauthorizedException();
 		}
 	}
+	
+	public List<SessionUserMap> getSessionUserMapByUserId(String token, String userId) {
+		AuthResponse response = authClient.getValidity(token);
+		try {
+			response.getEmail();
+		} catch (Exception e) {
+			throw new UnauthorizedException();
+		}
+		if (response.getRole().equals("User")) {
+			return sessionUserDAO.findByUserid(userId);
+		} else {
+			throw new UnauthorizedException();
+		}
+	}
 
 	@Transactional
 	public void modifySession(String token, Session session) {

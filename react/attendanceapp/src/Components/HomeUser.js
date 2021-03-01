@@ -152,7 +152,7 @@ class Home extends Component {
                         </Row>
                         <Row>
                             {this.state.content=="viewSessions" && <UserViewSessions token={this.state.token} userId={this.state.userId}/>}
-                            {this.state.content=="enrolledSessions" && <UserViewEnrolledSessions/>}
+                            {this.state.content=="enrolledSessions" && <UserViewEnrolledSessions token={this.state.token} userId={this.state.userId}/>}
                             {this.state.content=="notifications" && <Notifications/>}
                         </Row>
                     </Container>

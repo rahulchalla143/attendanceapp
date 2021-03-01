@@ -3,6 +3,7 @@ package com.example.attendanceapp.service;
 import java.util.List;
 
 import com.example.attendanceapp.model.Session;
+import com.example.attendanceapp.model.SessionUserMap;
 import com.example.attendanceapp.model.Skill;
 
 public interface SessionService {
@@ -27,4 +28,5 @@ public interface SessionService {
 	public void markAttendanceByUser(String token, int sessionId, String userId);
 	public void addFeedbackByUser(String token, int sessionId, String userId, String feedBack);
 	public void rejectUserToSession(String token, String userId, int sessionId);
+	public List<SessionUserMap> getSessionUserMapByUserId(String token, String userId);
 }
