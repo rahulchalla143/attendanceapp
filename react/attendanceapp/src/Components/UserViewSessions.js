@@ -9,73 +9,51 @@ class UserViewSessions extends Component {
 
     constructor(props) {
         super(props)
-        this.list=[]
-        this.state={
-            token:"",
+        this.list = []
+        this.state = {
+            token: "",
+            userId:0,
             sessionsList: [
-                {
-                    sessionId: 1,
-                    sessionDesc: "This is going to be the description of the Session 1",
-                    trainerName: "Trainer 1",
-                    sessionDate: "2015-05-25",
-                    sessionTime: "20:25",
-                },
-                {
-                    sessionId: 2,
-                    sessionDesc: "This is going to be the description of the Session 1",
-                    trainerName: "Trainer 2",
-                    sessionDate: "2015-05-25",
-                    sessionTime: "20:25",
-                },
-                {
-                    sessionId: 3,
-                    sessionDesc: "This is going to be the description of the Session 1",
-                    trainerName: "Trainer 3",
-                    sessionDate: "2015-05-25",
-                    sessionTime: "20:25",
-                },
-                {
-                    sessionId: 4,
-                    sessionDesc: "This is going to be the description of the Session 1",
-                    trainerName: "Trainer 4",
-                    sessionDate: "2015-05-25",
-                    sessionTime: "20:25",
-                }
+
             ],
-            userSessionComponentList:[]
+            userSessionComponentList: []
+        }
+        this.setInitialState = this.setInitialState.bind(this)
+    }
+
+    componentDidUpdate() {
+        if (this.props.token != this.state.token) {
+            this.setInitialState();
         }
     }
 
-    componentWillMount(){
-        console.log(JSON.stringify(this.props)+":::::::::::::::::::::::")
-        console.log(this.props.token+"???????????????????????????")
+    setInitialState() {
         axios.get("http://localhost:8082/sessionapp/sessions",
-        {
-            headers:{
-                Authorization: 'Bearer ' + this.props.token
-            },
-        })
-        .then((res)=>{
-            console.log(JSON.stringify(res.data))
-            this.setState({token:this.props.token,sessionsList:res.data})
-        })
-        .catch((e)=>{
-            console.log("ERRRRRRRrr"+e)
-        })
-    }
-
-
-    componentDidMount(){
-        this.state.sessionsList.map(session=>{
-            this.list.push(<UserSessionComponent sessionDetails={session} userId={1} token="erewer"/>)
-        })
-        this.setState({userSessionComponentList:this.list})
+            {
+                headers: {
+                    Authorization: 'Bearer ' + this.props.token
+                },
+            })
+            .then((res) => {
+                console.log(JSON.stringify(res.data))
+                this.setState({ token: this.props.token, userId: this.props.userId, sessionsList: res.data }, () => {
+                    this.state.sessionsList.map(session => {
+                        this.list.push(<UserSessionComponent sessionDetails={session} userId={this.state.userId} token={this.state.token} />)
+                    })
+                    this.setState({ userSessionComponentList: this.list }, () => {
+                        this.list = []
+                    })
+                })
+            })
+            .catch((e) => {
+                console.log("ERRRRRRRrr" + e)
+            })
     }
 
     render() {
         return (
-            <Container fluid className="px-5" style={{backgroundColor:"black"}}>
-                <h1 className="my-3" style={{color:"silver"}}>Sessions Available</h1>
+            <Container fluid className="px-5" style={{ backgroundColor: "black" }}>
+                <h1 className="my-3" style={{ color: "silver" }}>Sessions Available</h1>
                 {this.state.userSessionComponentList}
             </Container>
         )

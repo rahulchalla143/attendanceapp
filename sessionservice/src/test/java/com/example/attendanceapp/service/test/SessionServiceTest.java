@@ -120,6 +120,14 @@ public class SessionServiceTest {
 	}
 	
 	@Test
+	public void testRejectUserToSession() {
+		when(sessionDAO.findBySessionid(1)).thenReturn(Optional.of(new Session(1,"a","a","a","a","a")));
+		when(sessionUserDAO.findByUseridAndSessionid("a", 1)).thenReturn(new SessionUserMap(1,1,"a","a","a","a","a"));
+		when(authClient.getValidity("token")).thenReturn(new AuthResponse("a",true,"w","w","Admin","w","w","w","w","w"));
+		assertDoesNotThrow(()->sessionServiceImpl.rejectUserToSession("token", "a", 1));
+	}
+	
+	@Test
 	public void testGetApprovedSessionsByUserId() {
 		List<SessionUserMap> sessionUserMapList =new ArrayList<SessionUserMap>();
 		sessionUserMapList.add(new SessionUserMap(1,1,"1","a","a","Yes","a"));
@@ -151,7 +159,7 @@ public class SessionServiceTest {
 	public void testAddSessionToUser() {
 		when(sessionUserDAO.findByUseridAndSessionid("a", 1)).thenReturn(new SessionUserMap(1,1,"a","a","a","a","a"));
 		when(authClient.getValidity("token")).thenReturn(new AuthResponse("a",true,"w","w","User","w","w","w","w","w"));
-		assertDoesNotThrow(()->sessionServiceImpl.addSessionToUser("token", 1, "a"));	
+		assertDoesNotThrow(()->sessionServiceImpl.addSessionToUser("token", 1, "a","w"));	
 	}
 	
 	@Test

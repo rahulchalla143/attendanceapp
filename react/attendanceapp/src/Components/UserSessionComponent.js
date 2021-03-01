@@ -3,6 +3,7 @@ import "../StyleSheets/MyStyle.css";
 import Sidebar from "react-sidebar";
 import { MenuButtonWideFill } from "react-bootstrap-icons";
 import { Card, Badge, Button } from "react-bootstrap";
+import axios from 'axios';
 
 
 class UserSessionComponent extends Component {
@@ -23,15 +24,14 @@ class UserSessionComponent extends Component {
         this.onCancelButton = this.onCancelButton.bind(this);
         this.deRollSession = this.deRollSession.bind(this);
         this.setSlot = this.setSlot.bind(this);
+        this.getAvailableSlot = this.getAvailableSlot.bind(this);
     }
 
     componentDidMount() {
-        console.log("%%%%%%%%%%%%%%%%%%%%%555"+JSON.stringify(this.props.sessionDetails))
         this.setInitialState()
     }
 
     componentDidUpdate(){
-        console.log("%%%%%%%%%%%%%%%%%%%%%555"+JSON.stringify(this.props.sessionDetails))
         if(this.state.sessionDetails!=this.props.sessionDetails){
             this.setInitialState()
         }
@@ -45,13 +45,30 @@ class UserSessionComponent extends Component {
         })
     }
 
+    getAvailableSlot(){
+        var list = []
+        this.state.sessionDetails.availableslots.split(",").forEach(slot => {
+            list.push(<Badge id={slot} onClick={this.setSlot} variant="light border border-danger p-3 mx-2">{slot}</Badge>)
+        })
+        return list
+    }
+
     setButtonData() {
         if (this.state.buttonData == "enroll") {
             this.setState({ buttonData: "submit" })
         }
         if (this.state.buttonData == "submit") {
-            this.setState({ buttonData: "deroll" })
-            alert("Session with ID " +this.state.sessionDetails.sessionId+" has been Enrolled Successfully to Slot "+this.state.slot)
+            console.log(this.state.token)
+            axios.post("http://localhost:8082/sessionapp/addsession/"+this.state.userId+"/"+this.state.sessionDetails.sessionid+"/"+this.state.slot,
+            {
+                headers: {
+                    Authorization: 'Bearer ' + this.props.token
+                },
+            })
+            .then(res=>{
+                this.setState({ buttonData: "deroll" })
+                alert("Session with ID " +this.state.sessionDetails.sessionid+" has been Enrolled Successfully to Slot "+this.state.slot)
+            })
         }
     }
 
@@ -61,6 +78,12 @@ class UserSessionComponent extends Component {
 
     deRollSession() {
         if (window.confirm("Are you sure? Do you want to deroll?")) {
+            axios.post("http://localhost:8082/sessionapp/addsession/"+this.state.userId+"/"+this.state.sessionId,
+            {
+                headers: {
+                    Authorization: 'Bearer ' + this.props.token
+                },
+            })
             this.setState({ buttonData: "enroll" })
         }
     }
@@ -75,23 +98,20 @@ class UserSessionComponent extends Component {
         return (
             <Card className="mx-5 my-3">
                 <Card.Header className="d-flex flex-row" style={{backgroundColor:"silver"}}>
-                    <h5>Session Id : {this.state.sessionDetails.sessionId}</h5>
+                    <h5>Session Id : {this.state.sessionDetails.sessionid}</h5>
                     <span className="ml-auto">
-                        <h5>Timings : {this.state.sessionDetails.sessionDate} {this.state.sessionDetails.sessionTime}</h5>
+                        <h5>Timings : {this.state.sessionDetails.sessiondate} {this.state.sessionDetails.sessiontime}</h5>
                     </span>
                 </Card.Header>
                 <Card.Body>
                     <Card.Title>Trainer Name : {this.state.sessionDetails.trainerName}</Card.Title>
                     <Card.Text>
-                    {this.state.sessionDetails.sessionDesc}
+                    {this.state.sessionDetails.sessiondesc}
                     </Card.Text>
                     <div className="d-flex flex-row">
                         {this.state.buttonData == "submit" && <div className="d-flex flex-row">
                             <h6 className="text-muted pt-3">Select Slot : </h6>
-                            <Badge id="1" onClick={this.setSlot} variant="light border border-danger p-3 mx-2">1</Badge>
-                            <Badge id="2" onClick={this.setSlot} variant="light border border-danger p-3 mx-2">2</Badge>
-                            <Badge id="3" onClick={this.setSlot} variant="light border border-danger p-3 mx-2">3</Badge>
-                            <Badge id="4" onClick={this.setSlot} variant="light border border-danger p-3 mx-2">4</Badge>
+                            {this.getAvailableSlot()}
                         </div>}
                         {this.state.buttonData == "enroll" && <Button className="ml-auto mr-2" onClick={this.setButtonData}>Enroll</Button>}
                         {this.state.buttonData == "submit" && <Button className="ml-auto mr-2" onClick={this.onCancelButton}>Cancel</Button>}

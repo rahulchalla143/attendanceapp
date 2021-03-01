@@ -54,7 +54,7 @@ public class SessionServiceImpl implements SessionService {
 		}
 	}
 
-	public void addSessionToUser(String token, int sessionId, String userId) {
+	public void addSessionToUser(String token, int sessionId, String userId, String slot) {
 		AuthResponse response = authClient.getValidity(token);
 		try {
 			response.getEmail();
@@ -65,6 +65,8 @@ public class SessionServiceImpl implements SessionService {
 			SessionUserMap sessionUserMap = new SessionUserMap();
 			sessionUserMap.setSessionid(sessionId);
 			sessionUserMap.setUserid(userId);
+			sessionUserMap.setSelectedslot(slot);
+			sessionUserMap.setApproved("No");
 			sessionUserDAO.save(sessionUserMap);
 		} else {
 			throw new UnauthorizedException();
@@ -252,6 +254,26 @@ public class SessionServiceImpl implements SessionService {
 			}
 			SessionUserMap sessionUserMap = sessionUserDAO.findByUseridAndSessionid(userId, sessionId);
 			sessionUserMap.setApproved("Yes");
+			sessionUserDAO.save(sessionUserMap);
+		} else {
+			throw new UnauthorizedException();
+		}
+	}
+	
+	@Override
+	public void rejectUserToSession(String token, String userId, int sessionId) {
+		AuthResponse response = authClient.getValidity(token);
+		try {
+			response.getEmail();
+		} catch (Exception e) {
+			throw new UnauthorizedException();
+		}
+		if (response.getRole().equals("Admin")) {
+			if(sessionDAO.findBySessionid(sessionId).isEmpty()) {
+				throw new SessionNotFoundException();
+			}
+			SessionUserMap sessionUserMap = sessionUserDAO.findByUseridAndSessionid(userId, sessionId);
+			sessionUserMap.setApproved("Rejected");
 			sessionUserDAO.save(sessionUserMap);
 		} else {
 			throw new UnauthorizedException();

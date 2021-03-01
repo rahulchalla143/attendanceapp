@@ -29,10 +29,10 @@ public class SessionController {
 		sessionServiceImpl.addSession(token, session);
 	}
 
-	@PostMapping("/addsession/{userId}/{sessionId}")
+	@PostMapping("/addsession/{userId}/{sessionId}/{slot}")
 	public void addSessionToUser(@RequestHeader("Authorization") String token, @PathVariable int sessionId,
-			@PathVariable String userId) {
-		sessionServiceImpl.addSessionToUser(token, sessionId, userId);
+			@PathVariable String userId,@PathVariable String slot) {
+		sessionServiceImpl.addSessionToUser(token, sessionId, userId, slot);
 	}
 
 	@GetMapping("/sessions")
@@ -88,6 +88,11 @@ public class SessionController {
 	@GetMapping("/approvesession/{userId}/{sessionId}")
 	public void approveUser(@RequestHeader("Authorization") String token,@PathVariable("userId") String userId,@PathVariable("sessionId") int sessionId) {
 		sessionServiceImpl.approveUserToSession(token,userId,sessionId);
+	}
+	
+	@GetMapping("/rejectsession/{userId}/{sessionId}")
+	public void rejectUser(@RequestHeader("Authorization") String token,@PathVariable("userId") String userId,@PathVariable("sessionId") int sessionId) {
+		sessionServiceImpl.rejectUserToSession(token,userId,sessionId);
 	}
 	
 	@GetMapping("/sessionids")

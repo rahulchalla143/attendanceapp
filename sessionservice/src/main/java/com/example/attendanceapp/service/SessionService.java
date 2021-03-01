@@ -22,8 +22,9 @@ public interface SessionService {
 	//User Controls
 	public List<Session> getSessionsByUserId(String token, String userId);
 	public List<Session> getApprovedSessionsByUserId(String token, String userId);
-	public void addSessionToUser(String token, int sessionId, String userId);
+	public void addSessionToUser(String token, int sessionId, String userId,String slot);
 	public void deleteSessionByUser(String token, int sessionId, String userId);
 	public void markAttendanceByUser(String token, int sessionId, String userId);
 	public void addFeedbackByUser(String token, int sessionId, String userId, String feedBack);
+	public void rejectUserToSession(String token, String userId, int sessionId);
 }
