@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.attendanceapp.exceptions.NotYetApprovedException;
 import com.example.attendanceapp.exceptions.UnauthorizedException;
+import com.example.attendanceapp.exceptions.UserAlreadyExistsException;
 import com.example.attendanceapp.exceptions.UserNotFoundException;
 import com.example.attendanceapp.model.AuthResponse;
 import com.example.attendanceapp.model.UserData;
@@ -46,12 +47,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	public AuthResponse login(UserData userlogincredentials) {
 		final UserDetails userdetails = loadUserByUsername(userlogincredentials.getUemail());
 		if (userdetails.getPassword().equals(userlogincredentials.getUpassword())) {
-			String email = userdetails.getUsername();
-			String role = userdetails.getAuthorities().toArray()[0].toString();
-			String generateToken = jwtUtil.generateToken(userdetails);
-			UserData user = userDAO.findByUemail(email).get();
-			return new AuthResponse(user.getUserid(), true, user.getUfirstname(), generateToken, role, user.getUlastname(),
-					user.getUemail(), user.getUage(), user.getUgender(), user.getUcontact());
+			UserData userData = userDAO.findByUemailAndUpassword(userlogincredentials.getUemail(), userlogincredentials.getUpassword()).get();
+			if(userData.getUapproved().equals("Yes")) {
+				String email = userdetails.getUsername();
+				String role = userdetails.getAuthorities().toArray()[0].toString();
+				String generateToken = jwtUtil.generateToken(userdetails);
+				UserData user = userDAO.findByUemail(email).get();
+				return new AuthResponse(user.getUserid(), true, user.getUfirstname(), generateToken, role, user.getUlastname(),
+						user.getUemail(), user.getUage(), user.getUgender(), user.getUcontact());				
+			}
+			else {
+				throw new NotYetApprovedException();
+			}
 		} else {
 			throw new UnauthorizedException();
 		}
@@ -107,12 +114,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	@Override
 	public AuthResponse register(UserData userCredentials) {
-		userDAO.save(userCredentials);
-		if(userCredentials.getUapproved().equals("Yes")) {
-			return login(userCredentials);		
+		if(userDAO.findByUemail(userCredentials.getUemail()).isEmpty()){			
+			userDAO.save(userCredentials);
+			if(userCredentials.getUapproved().equals("Yes")) {
+				return login(userCredentials);		
+			}
+			else {
+				return null;
+			}			
 		}
 		else {
-			return null;
+			throw new UserAlreadyExistsException();
 		}
 	}
 

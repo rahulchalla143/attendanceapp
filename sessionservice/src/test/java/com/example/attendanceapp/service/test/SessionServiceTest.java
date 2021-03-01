@@ -126,7 +126,7 @@ public class SessionServiceTest {
 		when(sessionUserDAO.findByUserid("1")).thenReturn(sessionUserMapList);
 		when(sessionDAO.findBySessionid(1)).thenReturn(Optional.of(new Session(1,"a","a","a","a","a")));
 		when(authClient.getValidity("token")).thenReturn(new AuthResponse("a",true,"w","w","User","w","w","w","w","w"));
-		assertEquals(1, sessionServiceImpl.getSessionsByUserId("token", "1").get(0).getSessionid());
+		assertEquals(1, sessionServiceImpl.getApprovedSessionsByUserId("token", "1").get(0).getSessionid());
 		
 	}
 	

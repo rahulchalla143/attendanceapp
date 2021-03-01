@@ -49,6 +49,12 @@ public class SessionUserMapTest {
 		assertEquals(auth.getFeedback(),"feedback");
 	}
 	
+	@Test
+	void testApproved() {
+		auth.setApproved("approved");
+		assertEquals(auth.getApproved(),"approved");
+	}
+	
 	
 	
 	@Test
