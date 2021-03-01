@@ -26,7 +26,15 @@ class UserSessionComponent extends Component {
     }
 
     componentDidMount() {
+        console.log("%%%%%%%%%%%%%%%%%%%%%555"+JSON.stringify(this.props.sessionDetails))
         this.setInitialState()
+    }
+
+    componentDidUpdate(){
+        console.log("%%%%%%%%%%%%%%%%%%%%%555"+JSON.stringify(this.props.sessionDetails))
+        if(this.state.sessionDetails!=this.props.sessionDetails){
+            this.setInitialState()
+        }
     }
 
     setInitialState() {
@@ -63,6 +71,7 @@ class UserSessionComponent extends Component {
 
 
     render() {
+        console.log("______"+JSON.stringify(this.state.sessionDetails))
         return (
             <Card className="mx-5 my-3">
                 <Card.Header className="d-flex flex-row" style={{backgroundColor:"silver"}}>

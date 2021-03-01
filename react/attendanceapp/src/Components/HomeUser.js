@@ -99,6 +99,7 @@ class Home extends Component {
 
 
     render() {
+        console.log(this.state.token+"|||||||||||||||||||||")
         return (
             < div >
                 <MenuComponent
@@ -150,7 +151,7 @@ class Home extends Component {
                             {!this.state.sidebarDocked && <MenuButtonWideFill size={30} onClick={this.onHamBurgerClicked} />}
                         </Row>
                         <Row>
-                            {this.state.content=="viewSessions" && <UserViewSessions/>}
+                            {this.state.content=="viewSessions" && <UserViewSessions token={this.state.token} userId={this.state.userId}/>}
                             {this.state.content=="enrolledSessions" && <UserViewEnrolledSessions/>}
                             {this.state.content=="notifications" && <Notifications/>}
                         </Row>
