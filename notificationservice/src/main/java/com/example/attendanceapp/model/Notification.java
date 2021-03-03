@@ -32,7 +32,7 @@ public class Notification {
 	private String notificationdata;
 	@Column(name = "userid", length = 40)
 	private String userid;
-	@Column(name = "read", length = 20)
+	@Column(name = "isread", length = 20)
 	private String read;
 	
 
